@@ -1,25 +1,44 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Login</title>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-</head>
-<body>
-    <form method="post" action="/{{ action }}">
-      <div class="form-group">
-        <label for="email">Email address</label>
-        <input name="email" type="email" class="form-control" id="email" aria-describedby="emailHelp" placeholder="Enter email">
-        {% if action=='register'%}
-          <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
-        {% endif %}
+{% extends "base.html" %}
+{% block title %}{{action}}{% endblock %}
+{% block head %}
+<style>
+    .login-form {
+        min-width:600px;
+        background-color: #FFF;
+        padding: 25px 25px;
+        border-radius: 0px 0px 15px 15px;
+    }
+</style>
+{% endblock %}
+{% block content %}
+    <div class="container">
+      <div class="row">
+        <div class="col-sm"></div>
+        <div class="col-sm login-form">
+          <form method="post" action="/{{ action }}">
+              <div class="form-group">
+                  {% if action=='login'%}
+                     <h3>Login to FriendSafe!</h3>
+                  {% endif %}
+                  {% if action=='register'%}
+                     <h3>Register for FriendSafe!</h3>
+                  {% endif %}
+                <input name="email" type="email" class="form-control" id="email" aria-describedby="emailHelp" placeholder="Email Address">
+                {% if action=='register'%}
+                  <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+                {% endif %}
+              </div>
+              <div class="form-group">
+                <input name="password" type="password" class="form-control" id="password" placeholder="Password">
+              </div>
+              <button type="submit" class="btn btn-primary">Submit</button>
+              {% if action=='login'%}
+                     <a href="/register"><button type="button" id="register-button" class="btn btn-link">Haven't Registered? Click here to signup!</button></a>
+              {% endif %}
+            </form>
+        </div>
+        <div class="col-sm"></div>
       </div>
-      <div class="form-group">
-        <label for="password">Password</label>
-        <input name="password" type="password" class="form-control" id="password" placeholder="Password">
-      </div>
-      <button type="submit" class="btn btn-primary">Submit</button>
-    </form>
-</body>
+    </div>
+{% endblock %}
 </html>

@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}{{action}}{% endblock %}
+{% block head %}
+<style>
+    .home-form {
+        min-width:600px;
+        background-color: #FFF;
+        padding: 25px 25px;
+        border-radius: 0px 0px 15px 15px;
+    }
+
+</style>
+{% endblock %}
+{% block content %}
+    <div class="container">
+      <div class="row">
+        <div class="col-sm"></div>
+        <div class="col-sm home-form">
+            <h1>Welcome to FriendSafe!</h1>
+            <h4>A swell place to be</h4>
+             <a href="/login"><button type="button" id="register-button" class="btn btn-dark">Login</button></a>
+             <a href="/register"><button type="button" id="register-button" class="btn btn-secondary">Sign up!</button></a>
+        </div>
+        <div class="col-sm"></div>
+      </div>
+    </div>
+{% endblock %}
+</html>

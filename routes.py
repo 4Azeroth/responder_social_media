@@ -3,7 +3,6 @@ import bcrypt
 import responder
 from peewee import IntegrityError
 
-import database
 from database import db, User
 
 api = responder.API()
@@ -49,6 +48,11 @@ async def login(req, resp):
             resp.text = 'Invalid username or password'
     else:
         resp.content = api.template('login.html', action='login')
+
+
+@api.route("/")
+async def home_screen(req, resp):
+    resp.content = api.template('home.html')
 
 
 @api.route("/check_logged_in")
