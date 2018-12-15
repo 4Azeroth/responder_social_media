@@ -9,6 +9,7 @@ verify_ssl = true
 responder = "*"
 starlette = "==0.8.0"
 bcrypt = "*"
+peewee = "*"
 
 [requires]
 python_version = "3.7"
