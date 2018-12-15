@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from peewee import *
 
 # SQLite database using WAL journal mode and 64MB cache.
@@ -17,5 +19,12 @@ class User(BaseModel):
     password = CharField()
 
 
+class UserPost(BaseModel):
+    id = AutoField(primary_key=True)
+    user = ForeignKeyField(model=User)
+    content = CharField()
+    date = DateTimeField(default=datetime.now)
+
+
 with db:
-    db.create_tables([User])
+    db.create_tables([User, UserPost])

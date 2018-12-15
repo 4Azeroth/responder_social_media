@@ -6,7 +6,7 @@ import responder
 from peewee import IntegrityError
 
 from auth import get_current_user
-from database import db, User
+from database import db, User, UserPost
 
 api = responder.API()
 
@@ -69,7 +69,24 @@ async def login(req, resp):
 @api.route("/")
 async def home_screen(req, resp):
     user = get_current_user(req)
-    resp.content = api.template('home.html', user=user)
+    posts = UserPost.select().where(UserPost.user in [user]).order_by(UserPost.date.desc())
+    resp.content = api.template('home.html', user=user, posts=posts)
+
+
+@api.route("/post")
+async def post(req, resp):
+    @api.background.task
+    def process_post(data):
+        nonlocal req
+        user = get_current_user(req)
+        with db:
+            UserPost.create(user=user, content=data['content'])
+        return
+
+    data = await req.media()
+    process_post(data).result()
+    resp.status_code = 303
+    resp.headers['Location'] = "/"
 
 
 @api.route("/check_logged_in")

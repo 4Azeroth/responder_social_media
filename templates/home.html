@@ -22,6 +22,20 @@
              <a href="/login"><button type="button" id="register-button" class="btn btn-dark">Login</button></a>
              <a href="/register"><button type="button" id="register-button" class="btn btn-secondary">Sign up!</button></a>
             {% endif %}
+            {% if user %}
+                <form method="post" action="/post">
+                  <div class="form-group">
+                    <textarea name="content" class="form-control" rows="3"></textarea>
+                  </div>
+                  <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+                <br />
+                <ul class="list-group">
+                {% for post in posts %}
+                    <li class="list-group-item">{{ post.user.username }}: {{ post.content }}</li>
+                {% endfor %}
+                </ul>
+            {% endif %}
         </div>
         <div class="col-sm"></div>
       </div>
