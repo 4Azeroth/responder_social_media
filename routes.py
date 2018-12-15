@@ -5,27 +5,32 @@ import bcrypt
 import responder
 from peewee import IntegrityError
 
-from auth import get_current_user
-from database import db, User, UserPost
+from auth import get_current_user, get_friends
+from database import db, User, Post
 
 api = responder.API()
 
 
 @api.route('/register')
 async def register(req, resp):
-    @api.background.task
     def process_registration(data):
         hashed = bcrypt.hashpw(data['password'].encode(), bcrypt.gensalt())
         with db:
             try:
-                User.create(username=data['email'], password=hashed)
-                return {'success': True}
+                user = User.create(username=data['email'], password=hashed, display_name=data['display_name'])
+                return {'success': True, 'user_id': user.id, 'username': user.username}
             except IntegrityError:
-                return {'error': f'A user with this email already exists: {data["email"]}'}
+                return {'success': False, 'error': f'A user with this email already exists: {data["email"]}'}
 
     if req.method == 'post':
         data = await req.media()
-        resp.media = process_registration(data).result()
+        result = process_registration(data)
+        if result['success']:
+            resp.session.update({'user_id': result['user_id'], 'username': result['username']})
+            resp.status_code = 303
+            resp.headers['Location'] = "/"
+        else:
+            resp.content = api.template('login.html', action='register', error=result['error'])
     else:
         user = get_current_user(req)
         if user:
@@ -37,7 +42,6 @@ async def register(req, resp):
 
 @api.route('/login')
 async def login(req, resp):
-    @api.background.task
     def process_login(data):
         with db:
             with suppress(User.DoesNotExist):
@@ -49,7 +53,7 @@ async def login(req, resp):
 
     if req.method == 'post':
         data = await req.media()
-        result = process_login(data).result()
+        result = process_login(data)
         if result['success']:
             resp.session.update({'user_id': result['user_id'], 'username': result['username']})
             resp.text = f"Logged in succesfully as {result['username']}"
@@ -69,7 +73,8 @@ async def login(req, resp):
 @api.route("/")
 async def home_screen(req, resp):
     user = get_current_user(req)
-    posts = UserPost.select().where(UserPost.user in [user]).order_by(UserPost.date.desc())
+    friends = get_friends(user)
+    posts = Post.select().where(Post.user << [user, *friends]).order_by(Post.date.desc())
     resp.content = api.template('home.html', user=user, posts=posts)
 
 
@@ -80,7 +85,7 @@ async def post(req, resp):
         nonlocal req
         user = get_current_user(req)
         with db:
-            UserPost.create(user=user, content=data['content'])
+            Post.create(user=user, content=data['content'])
         return
 
     data = await req.media()

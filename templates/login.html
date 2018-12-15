@@ -31,6 +31,10 @@
               <div class="form-group">
                 <input name="password" type="password" class="form-control" id="password" placeholder="Password">
               </div>
+              {% if action=='register'%}
+                  <input name="display_name" type="text" class="form-control" id="display_name" placeholder="Display Name">
+                  <small id="display_help" class="form-text text-muted">What you will appear as on the site. Can use your real name or a handle.</small>
+                {% endif %}
               <button type="submit" class="btn btn-primary">Submit</button>
               {% if action=='login'%}
                      <a href="/register"><button type="button" id="register-button" class="btn btn-link">Haven't Registered? Click here to signup!</button></a>

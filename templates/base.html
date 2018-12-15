@@ -17,7 +17,11 @@
     <nav class="navbar navbar-dark bg-dark justify-content-between">
         <a class="navbar-brand" href="/">Home</a>
         {% if user %}
-        <a class="navbar-brand" href="/logout">Logout</a>
+        <span>
+            <span class="navbar-brand">{{ user.display_name }}</span>
+            <span class="navbar-brand">-</span>
+            <a class="navbar-brand" href="/logout">Logout</a>
+        </span>
         {% endif %}
     </nav>
     <div id="content">{% block content %}{% endblock %}</div>

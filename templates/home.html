@@ -19,7 +19,7 @@
             {% if user is none %}
             <h1>Welcome to FriendSafe!</h1>
             <h4>A swell place to be</h4>
-             <a href="/login"><button type="button" id="register-button" class="btn btn-dark">Login</button></a>
+             <a href="/login"><button type="button" id="login-button" class="btn btn-dark">Login</button></a>
              <a href="/register"><button type="button" id="register-button" class="btn btn-secondary">Sign up!</button></a>
             {% endif %}
             {% if user %}
@@ -32,7 +32,7 @@
                 <br />
                 <ul class="list-group">
                 {% for post in posts %}
-                    <li class="list-group-item">{{ post.user.username }}: {{ post.content }}</li>
+                    <li class="list-group-item">{{ post.user.display_name }}: {{ post.content }}</li>
                 {% endfor %}
                 </ul>
             {% endif %}
