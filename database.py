@@ -12,7 +12,9 @@ class BaseModel(Model):
 
 
 class User(BaseModel):
-    username = CharField()
+    id = AutoField(primary_key=True)
+    username = CharField(unique=True)
+    password = CharField()
 
 
 with db:
