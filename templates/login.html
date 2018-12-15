@@ -35,6 +35,9 @@
               {% if action=='login'%}
                      <a href="/register"><button type="button" id="register-button" class="btn btn-link">Haven't Registered? Click here to signup!</button></a>
               {% endif %}
+              {% if error %}
+                <div style="color:#FF0000;">{{error}}</div>
+              {% endif %}
             </form>
         </div>
         <div class="col-sm"></div>
